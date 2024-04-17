@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "35331939022",
+    "project_id": "techknows-e208d",
+    "storage_bucket": "techknows-e208d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:35331939022:android:799e0792941707abbe0e9f",
+        "android_client_info": {
+          "package_name": "com.example.techknow"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCV4iqu4UV4Fzi0SEFWYDwck50FrPnxpI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

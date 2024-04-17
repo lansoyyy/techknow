@@ -1,9 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:techknow/screens/auth/login_screen.dart';
 import 'package:techknow/screens/home_screen.dart';
+import 'package:techknow/services/add_user.dart';
 import 'package:techknow/utlis/colors.dart';
 import 'package:techknow/widgets/button_widget.dart';
 import 'package:techknow/widgets/text_widget.dart';
 import 'package:techknow/widgets/textfield_widget.dart';
+import 'package:techknow/widgets/toast_widget.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -31,7 +35,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 height: 20,
               ),
               Image.asset(
-                'assets/images/logo.png',
+                'assets/images/logo.jpg',
                 width: 200,
               ),
               const SizedBox(
@@ -84,12 +88,43 @@ class _SignupScreenState extends State<SignupScreen> {
               ButtonWidget(
                 width: 275,
                 label: 'Signup',
-                onPressed: () {},
+                onPressed: () {
+                  if (password.text == confirmpassword.text) {
+                    register(context);
+                  } else {
+                    showToast('Password do not match!');
+                  }
+                },
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  register(context) async {
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: id.text, password: password.text);
+
+      addUser(name.text, id.text, password.text);
+
+      showToast('Account created succesfully!');
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const LoginScreen()));
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        showToast('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        showToast('The account already exists for that email.');
+      } else if (e.code == 'invalid-email') {
+        showToast('The email address is not valid.');
+      } else {
+        showToast(e.toString());
+      }
+    } on Exception catch (e) {
+      showToast("An error occurred: $e");
+    }
   }
 }
