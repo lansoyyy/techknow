@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:techknow/screens/auth/faculty_login.dart';
 import 'package:techknow/screens/auth/signup_screen.dart';
 import 'package:techknow/screens/home_screen.dart';
 import 'package:techknow/utlis/colors.dart';
@@ -9,14 +8,14 @@ import 'package:techknow/widgets/text_widget.dart';
 import 'package:techknow/widgets/textfield_widget.dart';
 import 'package:techknow/widgets/toast_widget.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class FacultyLoginScreen extends StatefulWidget {
+  const FacultyLoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<FacultyLoginScreen> createState() => _FacultyLoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _FacultyLoginScreenState extends State<FacultyLoginScreen> {
   final id = TextEditingController();
   final password = TextEditingController();
 
@@ -236,18 +235,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   )
                 ],
               ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const FacultyLoginScreen()));
-                },
-                child: TextWidget(
-                  text: "Continue as Faculty",
-                  fontSize: 12,
-                  color: primary,
-                  fontFamily: 'Bold',
-                ),
-              )
             ],
           ),
         ),
