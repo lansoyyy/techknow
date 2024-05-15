@@ -108,7 +108,7 @@ class _SignupScreenState extends State<SignupScreen> {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: id.text, password: password.text);
 
-      addUser(name.text, id.text, password.text);
+      addUser(name.text, id.text, password.text, 'Student');
 
       showToast(
           'Account created succesfully! Verification was sent to your email');

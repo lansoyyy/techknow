@@ -9,15 +9,23 @@ import 'package:techknow/widgets/button_widget.dart';
 import 'package:techknow/widgets/textfield_widget.dart';
 import 'package:techknow/widgets/toast_widget.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class TeacherHomeScreen extends StatefulWidget {
+  const TeacherHomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<TeacherHomeScreen> createState() => _TeacherHomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _TeacherHomeScreenState extends State<TeacherHomeScreen> {
   bool inclasses = false;
+
+  String generateRandomString(int length) {
+    const String chars =
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    Random random = Random();
+    return String.fromCharCodes(Iterable.generate(
+        length, (_) => chars.codeUnitAt(random.nextInt(chars.length))));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
               .collection('Classes')
-              .where('students',
-                  arrayContains: FirebaseAuth.instance.currentUser!.uid)
+              .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
               .snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -61,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     alignment: Alignment.bottomCenter,
                     child: Container(
                       width: double.infinity,
-                      height: 250,
+                      height: inclasses ? 400 : 250,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         color: Colors.white,
@@ -79,9 +86,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: [
                                   data.docs.isEmpty
                                       ? ButtonWidget(
-                                          label: 'Join Class',
+                                          label: 'Create Class',
                                           onPressed: () {
-                                            joinClassDialog();
+                                            setState(() {
+                                              code.text =
+                                                  generateRandomString(6);
+                                            });
+                                            addClassDialog();
                                           },
                                         )
                                       : ButtonWidget(
@@ -116,6 +127,10 @@ class _HomeScreenState extends State<HomeScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         ButtonWidget(
+          label: 'Leaderboards',
+          onPressed: () {},
+        ),
+        ButtonWidget(
           label: 'Modules',
           onPressed: () {},
         ),
@@ -125,6 +140,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         ButtonWidget(
           label: 'Announcements',
+          onPressed: () {},
+        ),
+        ButtonWidget(
+          label: 'Student Records',
           onPressed: () {},
         ),
         Row(
@@ -145,8 +164,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  final name = TextEditingController();
   final code = TextEditingController();
-  joinClassDialog() {
+  addClassDialog() {
     showDialog(
       context: context,
       builder: (context) {
@@ -157,36 +177,23 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextFieldWidget(
+                  isEnabled: false,
                   controller: code,
                   label: 'Class Code',
+                ),
+                TextFieldWidget(
+                  controller: name,
+                  label: 'Class Name',
                 ),
                 const SizedBox(
                   height: 20,
                 ),
                 ButtonWidget(
-                  label: 'Join Class',
-                  onPressed: () async {
-                    DocumentSnapshot doc = await FirebaseFirestore.instance
-                        .collection('Classes')
-                        .doc(code.text)
-                        .get();
-
-                    if (doc.exists) {
-                      await FirebaseFirestore.instance
-                          .collection('Classes')
-                          .doc(code.text)
-                          .update({
-                        'students': FieldValue.arrayUnion(
-                            [FirebaseAuth.instance.currentUser!.uid]),
-                      });
-                      showToast('Class joined!');
-                      Navigator.pop(context);
-                    } else {
-                      showToast('Class do not exist!');
-                      Navigator.pop(context);
-                    }
-
-                    code.clear();
+                  label: 'Add Class',
+                  onPressed: () {
+                    addClass(name.text, code.text);
+                    showToast('Class added!');
+                    Navigator.pop(context);
                   },
                 ),
               ],

@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:techknow/screens/auth/signup_screen.dart';
 import 'package:techknow/screens/home_screen.dart';
+import 'package:techknow/screens/teacher_home_screen.dart';
 import 'package:techknow/utlis/colors.dart';
 import 'package:techknow/widgets/button_widget.dart';
 import 'package:techknow/widgets/text_widget.dart';
@@ -250,7 +251,7 @@ class _FacultyLoginScreenState extends State<FacultyLoginScreen> {
       if (user.user!.emailVerified) {
         showToast('Logged in succesfully!');
         Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const HomeScreen()));
+            MaterialPageRoute(builder: (context) => const TeacherHomeScreen()));
       } else {
         showToast('Please verify your email!');
       }

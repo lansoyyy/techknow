@@ -1,17 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-Future addUser(name, email, password, userType) async {
-  final docUser = FirebaseFirestore.instance
-      .collection('Users')
-      .doc(FirebaseAuth.instance.currentUser!.uid);
+Future addClass(name, code) async {
+  final docUser = FirebaseFirestore.instance.collection('Classes').doc(code);
 
   final json = {
     'name': name,
-    'email': email,
-    'password': password,
+    'students': [],
+    'id': docUser.id,
+    'code': code,
     'dateTime': DateTime.now(),
-    'userType': userType,
     'uid': FirebaseAuth.instance.currentUser!.uid
   };
 
