@@ -260,7 +260,7 @@ class _LoginScreenState extends State<LoginScreen> {
       final user = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: id.text, password: password.text);
 
-      if (!user.user!.emailVerified) {
+      if (user.user!.emailVerified) {
         showToast('Logged in succesfully!');
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => const HomeScreen()));

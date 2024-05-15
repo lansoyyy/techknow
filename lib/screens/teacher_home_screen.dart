@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:techknow/screens/class_pages/modules_page.dart';
+import 'package:techknow/screens/class_pages/quiz_page.dart';
 import 'package:techknow/services/add_class.dart';
 import 'package:techknow/widgets/button_widget.dart';
 import 'package:techknow/widgets/textfield_widget.dart';
@@ -143,7 +144,13 @@ class _TeacherHomeScreenState extends State<TeacherHomeScreen> {
         ),
         ButtonWidget(
           label: 'Quizzes',
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => QuizPage(
+                      isteacher: true,
+                      id: code,
+                    )));
+          },
         ),
         ButtonWidget(
           label: 'Announcements',

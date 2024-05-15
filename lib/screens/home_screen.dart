@@ -128,7 +128,13 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         ButtonWidget(
           label: 'Quizzes',
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => ModulesPage(
+                      isteacher: false,
+                      id: code,
+                    )));
+          },
         ),
         ButtonWidget(
           label: 'Announcements',
