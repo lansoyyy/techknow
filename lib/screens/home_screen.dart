@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:techknow/screens/class_pages/modules_page.dart';
 import 'package:techknow/services/add_class.dart';
 import 'package:techknow/widgets/button_widget.dart';
 import 'package:techknow/widgets/textfield_widget.dart';
@@ -72,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: inclasses
-                            ? classes()
+                            ? classes(data.docs.first['code'])
                             : Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
@@ -111,13 +112,19 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget classes() {
+  Widget classes(String code) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         ButtonWidget(
           label: 'Modules',
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => ModulesPage(
+                      isteacher: false,
+                      id: code,
+                    )));
+          },
         ),
         ButtonWidget(
           label: 'Quizzes',
