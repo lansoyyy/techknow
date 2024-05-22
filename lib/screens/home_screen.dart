@@ -2,8 +2,10 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:techknow/screens/auth/login_screen.dart';
 import 'package:techknow/screens/class_pages/modules_page.dart';
 import 'package:techknow/services/add_class.dart';
 import 'package:techknow/widgets/button_widget.dart';
@@ -56,57 +58,115 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       fit: BoxFit.cover),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 50),
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      width: double.infinity,
-                      height: 250,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                        border: Border.all(
-                          color: Colors.black,
+                child: Stack(
+                  children: [
+                    SafeArea(
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: IconButton(
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                      title: const Text(
+                                        'Logout Confirmation',
+                                        style: TextStyle(
+                                            fontFamily: 'QBold',
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      content: const Text(
+                                        'Are you sure you want to Logout?',
+                                        style:
+                                            TextStyle(fontFamily: 'QRegular'),
+                                      ),
+                                      actions: <Widget>[
+                                        MaterialButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(true),
+                                          child: const Text(
+                                            'Close',
+                                            style: TextStyle(
+                                                fontFamily: 'QRegular',
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        MaterialButton(
+                                          onPressed: () async {
+                                            Navigator.of(context).pushReplacement(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const LoginScreen()));
+                                          },
+                                          child: const Text(
+                                            'Continue',
+                                            style: TextStyle(
+                                                fontFamily: 'QRegular',
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      ],
+                                    ));
+                          },
+                          icon: const Icon(
+                            Icons.logout,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: inclasses
-                            ? classes(data.docs.first['code'])
-                            : Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  data.docs.isEmpty
-                                      ? ButtonWidget(
-                                          label: 'Join Class',
-                                          onPressed: () {
-                                            joinClassDialog();
-                                          },
-                                        )
-                                      : ButtonWidget(
-                                          label:
-                                              'Class (${data.docs.first['code']})',
-                                          onPressed: () {
-                                            setState(() {
-                                              inclasses = true;
-                                            });
-                                          },
-                                        ),
-                                  ButtonWidget(
-                                    label: 'Profile',
-                                    onPressed: () {},
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 50),
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          width: double.infinity,
+                          height: 250,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.black,
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: inclasses
+                                ? classes(data.docs.first['code'])
+                                : Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      data.docs.isEmpty
+                                          ? ButtonWidget(
+                                              label: 'Join Class',
+                                              onPressed: () {
+                                                joinClassDialog();
+                                              },
+                                            )
+                                          : ButtonWidget(
+                                              label:
+                                                  'Class (${data.docs.first['code']})',
+                                              onPressed: () {
+                                                setState(() {
+                                                  inclasses = true;
+                                                });
+                                              },
+                                            ),
+                                      ButtonWidget(
+                                        label: 'Profile',
+                                        onPressed: () {},
+                                      ),
+                                      ButtonWidget(
+                                        label: 'Settings',
+                                        onPressed: () {},
+                                      ),
+                                    ],
                                   ),
-                                  ButtonWidget(
-                                    label: 'Settings',
-                                    onPressed: () {},
-                                  ),
-                                ],
-                              ),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ));
           }),
     );
