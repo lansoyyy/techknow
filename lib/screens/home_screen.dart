@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:techknow/screens/auth/login_screen.dart';
 import 'package:techknow/screens/class_pages/modules_page.dart';
 import 'package:techknow/services/add_class.dart';
+import 'package:techknow/services/add_request.dart';
 import 'package:techknow/widgets/button_widget.dart';
 import 'package:techknow/widgets/textfield_widget.dart';
 import 'package:techknow/widgets/toast_widget.dart';
@@ -204,12 +205,67 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ButtonWidget(
+              width: 150,
               color: Colors.red,
               label: 'Back',
               onPressed: () {
                 setState(() {
                   inclasses = false;
                 });
+              },
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            ButtonWidget(
+              width: 150,
+              color: Colors.red,
+              label: 'Leave Class',
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          title: const Text(
+                            'Leave Class Confirmation',
+                            style: TextStyle(
+                                fontFamily: 'QBold',
+                                fontWeight: FontWeight.bold),
+                          ),
+                          content: const Text(
+                            'Are you sure you want to leave this class?',
+                            style: TextStyle(fontFamily: 'QRegular'),
+                          ),
+                          actions: <Widget>[
+                            MaterialButton(
+                              onPressed: () => Navigator.of(context).pop(true),
+                              child: const Text(
+                                'Close',
+                                style: TextStyle(
+                                    fontFamily: 'QRegular',
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            MaterialButton(
+                              onPressed: () async {
+                                await FirebaseFirestore.instance
+                                    .collection('Classes')
+                                    .doc(code)
+                                    .update({
+                                  'students': FieldValue.arrayRemove(
+                                      [FirebaseAuth.instance.currentUser!.uid]),
+                                });
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text(
+                                'Continue',
+                                style: TextStyle(
+                                    fontFamily: 'QRegular',
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ));
               },
             ),
           ],
@@ -245,14 +301,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         .get();
 
                     if (doc.exists) {
-                      await FirebaseFirestore.instance
-                          .collection('Classes')
-                          .doc(code.text)
-                          .update({
-                        'students': FieldValue.arrayUnion(
-                            [FirebaseAuth.instance.currentUser!.uid]),
-                      });
-                      showToast('Class joined!');
+                      // await FirebaseFirestore.instance
+                      //     .collection('Classes')
+                      //     .doc(code.text)
+                      //     .update({
+                      //   'students': FieldValue.arrayUnion(
+                      //       [FirebaseAuth.instance.currentUser!.uid]),
+                      // });
+                      addRequest(code.text);
+                      showToast(
+                          'Your request was sent! Wait for the approval to join the class');
                       Navigator.pop(context);
                     } else {
                       showToast('Class do not exist!');

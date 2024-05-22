@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:techknow/screens/auth/login_screen.dart';
 import 'package:techknow/screens/class_pages/modules_page.dart';
 import 'package:techknow/screens/class_pages/quiz_page.dart';
+import 'package:techknow/screens/teacher_pages/students_page.dart';
 import 'package:techknow/services/add_class.dart';
 import 'package:techknow/widgets/button_widget.dart';
 import 'package:techknow/widgets/textfield_widget.dart';
@@ -183,6 +184,8 @@ class _TeacherHomeScreenState extends State<TeacherHomeScreen> {
     );
   }
 
+  final newname = TextEditingController();
+
   Widget classes(String code) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -219,16 +222,75 @@ class _TeacherHomeScreenState extends State<TeacherHomeScreen> {
           label: 'Student Records',
           onPressed: () {},
         ),
+        ButtonWidget(
+          label: 'Rename Class',
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextFieldWidget(
+                            controller: newname,
+                            label: 'Enter new class name',
+                          ),
+                        ],
+                      ),
+                      actions: <Widget>[
+                        MaterialButton(
+                          onPressed: () => Navigator.of(context).pop(true),
+                          child: const Text(
+                            'Close',
+                            style: TextStyle(
+                                fontFamily: 'QRegular',
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        MaterialButton(
+                          onPressed: () async {
+                            await FirebaseFirestore.instance
+                                .collection('Classes')
+                                .doc(code)
+                                .update({'name': newname.text});
+                            Navigator.of(context).pop(true);
+                          },
+                          child: const Text(
+                            'Continue',
+                            style: TextStyle(
+                                fontFamily: 'QRegular',
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ));
+          },
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ButtonWidget(
+              width: 150,
               color: Colors.red,
               label: 'Back',
               onPressed: () {
                 setState(() {
                   inclasses = false;
                 });
+              },
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            ButtonWidget(
+              width: 150,
+              color: Colors.green,
+              label: 'Students',
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => StudentsPage(
+                          id: code,
+                        )));
               },
             ),
           ],
